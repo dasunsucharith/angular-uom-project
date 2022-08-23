@@ -1,5 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { Supplier } from 'src/app/Models/supplier.model';
 import { SupplierService } from '../../Services/supplier.service';
 
 @Component({
@@ -17,6 +18,8 @@ export class AddSupplierComponent implements OnInit {
 
   isDataUploading = false;
   @Output() cancelAddView: EventEmitter<void> = new EventEmitter<void>();
+  supplierAddEvent: any;
+  supplierService: any;
 
   constructor(
     private fb: FormBuilder
@@ -25,6 +28,13 @@ export class AddSupplierComponent implements OnInit {
   ngOnInit(): void {}
 
   onSubmit() {
+    const values = this.supplierFrom.value as Supplier;
+    this.isDataUploading = true;
+    this.supplierService.addSupplier(values as Supplier).subscribe((res) => {
+      this.supplierAddEvent.emit();
+      this.isDataUploading = false;
+      this.supplierFrom.reset();
+    });
   }
 
   get f() {
